@@ -3,6 +3,7 @@ const axios = require('axios');
 module.exports = async function (context) {
   if (context.event.isText) {
     const { text } = context.event;
+    console.log('text:\n', text);
 
     const host = 'https://stickershop.line-scdn.net/stickershop/v1/product/';
     const productInfo = '/linestorepc/productinfo.meta';
