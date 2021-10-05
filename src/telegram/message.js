@@ -1,34 +1,16 @@
-const axios = require('axios');
+const { getSticker } = require('../utils/sticker.js');
 
 module.exports = async function (context) {
   if (context.event.isText) {
     const { text } = context.event;
-    console.log('text:\n', text);
+    console.log('telegram text:\n', text);
 
-    const host = 'https://stickershop.line-scdn.net/stickershop/v1/product/';
-    const productInfo = '/linestorepc/productinfo.meta';
-
-    const regex = /https?.+line.me.+\b(\d+)/g;
-    const matches = regex.exec(text);
-    const stickerId = matches && Number(matches[1]);
-
-    if (Number.isInteger(stickerId)) {
-      const res = await axios.get(`${host}${stickerId}${productInfo}`);
-      if (res.status == 200) {
-        const info = res.data;
-        const name = info.title['zh_TW'];
-
-        let downloadLink = `${host}${stickerId}/iphone/`;
-        if (info.hasAnimation) {
-          downloadLink += 'stickerpack@2x.zip';
-        } else {
-          downloadLink += 'stickers@2x.zip';
-        }
-
-        await context.sendText(`Download: [${name}](${downloadLink})`, {
-          parseMode: 'markdown',
-        });
-      }
+    const stickerMeta = await getSticker(text);
+    const { name = '', downloadLink = '' } = stickerMeta;
+    if (name && downloadLink) {
+      await context.sendText(`${name}\nDownload: ${downloadLink}`, {
+        parseMode: 'markdown',
+      });
     }
   }
 };
