@@ -18,5 +18,8 @@
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "^27.2.4",
     "prettier": "^2.4.1"
+  },
+  "resolutions": {
+    "**/got": ">=11.8.5"
   }
 }
